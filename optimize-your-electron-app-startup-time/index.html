@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+	<title>Electron: optimize app startup time</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<link rel="stylesheet" type="text/css" href="../assets/css/style.css?v=9f59a620c0" />
+
+	<link rel="shortcut icon" href="../favicon.png" type="image/png" />
+    <link rel="canonical" href="index.html" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    <link rel="amphtml" href="amp/index.html" />
+    
+    <meta property="og:site_name" content="Hi, I&#x27;m Vince" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Electron: optimize app startup time" />
+    <meta property="og:description" content="Make your app open terribly faster." />
+    <meta property="og:url" content="http://localhost:2368/optimize-your-electron-app-startup-time/" />
+    <meta property="article:published_time" content="2018-05-10T18:54:00.000Z" />
+    <meta property="article:modified_time" content="2018-12-21T14:14:09.000Z" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Electron: optimize app startup time" />
+    <meta name="twitter:description" content="Make your app open terribly faster." />
+    <meta name="twitter:url" content="http://localhost:2368/optimize-your-electron-app-startup-time/" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="Vince Lwt" />
+    <meta name="twitter:site" content="@vincelwt" />
+    <meta name="twitter:creator" content="@vincelwt" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Hi, I&#x27;m Vince",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "http://localhost:2368/content/images/2018/12/logo-1.png",
+            "width": 60,
+            "height": 60
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Vince Lwt",
+        "image": {
+            "@type": "ImageObject",
+            "url": "http://localhost:2368/content/images/2018/12/square.jpg",
+            "width": 1130,
+            "height": 1130
+        },
+        "url": "http://localhost:2368/author/vince/",
+        "sameAs": [
+            "https://twitter.com/vincelwt"
+        ]
+    },
+    "headline": "Electron: optimize app startup time",
+    "url": "http://localhost:2368/optimize-your-electron-app-startup-time/",
+    "datePublished": "2018-05-10T18:54:00.000Z",
+    "dateModified": "2018-12-21T14:14:09.000Z",
+    "description": "Make your app open terribly faster.",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "http://localhost:2368/"
+    }
+}
+    </script>
+
+    <script src="../public/ghost-sdk.js?v=9f59a620c0"></script>
+<script>
+ghost.init({
+	clientId: "ghost-frontend",
+	clientSecret: "71159466bd71"
+});
+</script>
+    <meta name="generator" content="Ghost 2.9" />
+    <link rel="alternate" type="application/rss+xml" title="Hi, I&#x27;m Vince" href="../rss/index.html" />
+</head>
+
+<body class="post-template">
+
+	<nav id="menu">
+	<a class="close-button">Close</a>
+	<div class="nav-wrapper">
+		<p class="nav-label">Menu</p>
+		<ul>
+			<li class="nav-home" role="presentation"><a href="../index.html">Home</a></li>
+			<li class="nav-twitter"><a href="https://twitter.com/vincelwt" title="@vincelwt"><i class="ic ic-twitter"></i> Twitter</a></li>
+			<li class="nav-subscribe"><a href="../subscribe/index.html"><i class="ic ic-mail"></i> Subscribe</a></li>
+		</ul>
+	</div>
+</nav>
+
+
+	<section id="wrapper">
+		<a class="hidden-close"></a>
+		
+
+<div class="progress-container">
+	<span class="progress-bar"></span>
+</div>
+
+<header id="post-header">
+	<div class="inner">
+		<nav id="navigation">
+			<span class="blog-logo">
+				<a href="../index.html"><img src="../content/images/2018/12/logo-1.png" alt="Blog Logo" /></a>
+			</span>
+			<!--<span id="menu-button" class="nav-button">
+				<a class="menu-button"><i class="ic ic-menu"></i> Menu</a>
+			</span>-->
+		</nav>
+		<h1 class="post-title">Electron: optimize app startup time</h1>
+		<span class="post-meta"><a href="../author/vince/index.html">Vince Lwt</a> | <time datetime="2018-05-10">10 May 2018</time></span>
+		
+	</div>
+</header>
+
+<main class="content" role="main">
+	<article class="post">
+		<div class="inner">
+
+			<section class="post-content">
+				<p><strong>/!\ DRAFT ARTICLE /!\</strong></p><p>It's well known that Electron apps have sub-par performances compared to their native counterparts.</p><p>I think that's true to some extent, altough a greatly coded Electron app can feel as smooth as a native app to use.</p><p>Recently, I applied some optimizations to my app <a href="https://getharmony.xyz">Harmony</a> (a music player) making the startup feel much faster.</p><p>Before:</p><p>After:</p><p>On my app, here is what happens (in short) on startup:</p><ul><li>HTML &amp; CSS are loaded and rendered</li><li>Javascript is asynchronously loaded</li><li>Dependencies are loaded (the longest)</li><li>JS starts and sets the UI elements in place (tracks, buttons, etc...)</li></ul><p>As an end-user, you used to first see the basic HTML structure then after a few seconds element starts to appear where they need to be and fill the UI.</p><p>Why not save the state of the app so we can directly show a pre-rendered UI ?</p><p>For example, by exporting the DOM before quitting the app and loading it back on start.</p><p>Turns out it can be done pretty trivially, altough there is a few headaches on the path.</p><h2 id="the-code">The code</h2><p>Everything happens in the main process.</p><p>First the function saving the current state of the app to a new HTML file, containing the current version of the app.</p><p>Let's add the current version to the cached file's name: if in the future you modify the HTML, your users will use the updated version instead of an old cached one.</p><pre><code>function saveState() {
+	console.log('Saving window for faster startup...')
+
+	let writePath = path.join(app.getPath('userData'), 'harmony'+app.getVersion()+'_index.html').replace(/\\/g, "\\\\") 
+
+	// Cache rendered html for faster startup 🚀
+	// regex .replace is for escaping mfucking windows paths
+	window.webContents.executeJavaScript(`
+		// Reset ui elements
+		
+		getById('playerBufferBar').style.transform = getById('playerProgressBar').style.transform = 'translateX(0%)'
+		
+		addClass('playpauseIcon', 'icon-play')
+		removeClass('playpauseIcon', 'icon-pause')
+		removeClass(".playingIcon", "blink")
+		addClass('refreshStatus', 'hide')
+
+		fs.writeFileSync("${writePath}",  '&lt;!DOCTYPE html&gt;'+document.documentElement.outerHTML)
+
+		// Save settings
+		store.set('settings', settings)
+	
+	`)
+}
+</code></pre><p>Reset/remove the elements of the UI you want in place and save the HTML to a new file in the <code>userData</code> directory.</p><p>Make sure to start by <code>&lt;!DOCTYPE html&gt;</code> in your file or it won't work when we load it from the Data URL. I spent a while figuring this out.</p><p>Now invoke the function from your app's <code>before-quit</code> event:</p><pre><code>app.on('before-quit', () =&gt;  {
+	willQuitApp = true
+	
+	saveState()
+})
+
+</code></pre><p>Also call it from your app's window's <code>close</code> event:</p><pre><code>window.on('close', (e) =&gt; {
+	saveState()
+
+	if (willQuitApp || process.platform !== 'darwin') {
+		/* the user tried to quit the app */
+		window = null
+	} else {
+		/* the user only tried to close the window */
+		e.preventDefault()
+		window.hide()
+	}
+})
+
+</code></pre><p>Now, if the user has the cached <code>index.html</code> in his cache load it instead of the default <code>index.html</code>:</p><pre><code>let cachedIndex = path.join(app.getPath('userData'), `/your_app${app.getVersion()}_index.html`) // Used for faster startup
+let indexToPull = fs.existsSync(cachedIndex) ? cachedIndex : path.join(__dirname, '/app/index.html')
+	
+const pageContent = fs.readFileSync(indexToPull,'utf8')
+
+window.loadURL('data:text/html;charset=UTF-8,' + encodeURIComponent(pageContent), {
+	baseURLForDataURL: `file://${__dirname}/app/`
+})
+</code></pre><p>Depending on if a cached HTML exists, we load the corresponding file.</p><p>We can't load the cached file from it's path as we'll be placed in the <code>userData</code> directory and you won't be able to access any static files (CSS, JS, images).</p><p>So we have to read it and then send it as a Data URL to be rendered.</p><p>Now however, your JS will be 'placed' in the same directory as your main process file. Say you have in <code>app.js</code> some local dependencies like <code>require('./utils/db')</code> - well it won't work.</p><p>As a simple workaroung hack, I ended up importing my local dependencies like this:</p><pre><code>if (__dirname.replace(/\//g, '').endsWith("app")) {
+	__dirname = path.join(__dirname, '/app')
+}
+
+const utils = require(path.join(__dirname, '/js/utils.js'))
+</code></pre><p>As <code>app.js</code> will get loaded from the same folder as <code>main.js</code> <strong>or</strong> from <code>app/settings.html</code> we want to make sure <code>__dirname</code> is always the at the root of where I store my <code>.js</code> files - that's why we make sure it's the correct directory and update it if not.</p><h2 id="end-words">End words</h2><p>The caveat to this technique is even if the UI appears loaded, you can't interact with the app until the proper JS is fully loaded.</p><p>This can be further optimized by loading first only the UI interaction code then the rest.</p><p>For most users it won't be noticeable tho.</p>
+			</section>
+
+			<section class="post-info">
+
+				<div class="post-share">
+					<a class="twitter" href="https://twitter.com/share?text=Electron: optimize app startup time&url=http://localhost:2368/optimize-your-electron-app-startup-time/" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+						<i class="ic ic-twitter"></i><span class="hidden">Twitter</span>
+					</a>
+					<a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:2368/optimize-your-electron-app-startup-time/" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+						<i class="ic ic-facebook"></i><span class="hidden">Facebook</span>
+					</a>
+					<div class="clear"></div>
+				</div>
+
+				<aside class="post-tags">
+					
+				</aside>
+
+				<div class="clear"></div>
+
+						<aside class="post-author">
+							<figure class="post-author-avatar avatar">
+									<img src="../content/images/2018/12/square.jpg" alt="Vince Lwt" />
+							</figure>
+							<div class="post-author-bio">
+								<h4 class="post-author-name"><a href="../author/vince/index.html">Vince Lwt</a></h4>
+									<span class="post-author-location"><i class="ic ic-location"></i> On a beach somewhere</span>
+									<span class="post-author-twitter"><i class="ic ic-twitter"></i> <a target="_blank" href="https://twitter.com/@vincelwt">Twitter</a></span>
+							</div>
+							<div class="clear"></div>
+						</aside>
+
+			</section>
+
+
+			<!--<section class="post-comments">
+				<a id="show-disqus" class="post-comments-activate">Show Comments</a>
+			    <div id="disqus_thread"></div>
+			</section>-->
+
+            <section class="post-subscribe">
+                <form method="post" action="../subscribe/index.html" id="" class="post-subscribe-form">
+    <input class="confirm" type="hidden" name="confirm"  /><input class="location" type="hidden" name="location"  /><input class="referrer" type="hidden" name="referrer"  />
+
+    <div class="form-group">
+        <input class="post-subscribe-input" type="email" name="email" placeholder="Your email address" />
+    </div>
+    <button id="" class="post-subscribe-button" type="submit"><span>Subscribe</span></button>
+    
+<script>
+    (function(g,h,o,s,t){
+        var buster = function(b,m) {
+            h[o]('input.'+b).forEach(function (i) {
+                i.value=i.value || m;
+            });
+        };
+        buster('location', g.location.href);
+        buster('referrer', h.referrer);
+    })(window,document,'querySelectorAll','value');
+</script>
+
+</form>
+
+
+                <p>Get the latest posts delivered right to your inbox.</p>
+            </section>
+
+			<aside class="post-nav">
+					<a class="post-nav-next" href="../client-side-s3-upload/index.html">
+						<section class="post-nav-teaser">
+							<i class="ic ic-arrow-left"></i>
+							<h2 class="post-nav-title">Client-side S3 file(s) uploading</h2>
+							<p class="post-nav-excerpt">Your servers need to take a break&hellip;</p>
+						</section>
+					</a>
+					<a class="post-nav-prev" href="../manifesto/index.html">
+						<section class="post-nav-teaser">
+							<i class="ic ic-arrow-right"></i>
+							<h2 class="post-nav-title">Manifesto</h2>
+							<p class="post-nav-excerpt">Stay hungry, stay foolish.&hellip;</p>
+						</section>
+					</a>
+				<div class="clear"></div>
+			</aside>
+
+
+		</div>
+	</article>
+</main>
+
+
+		<div id="body-class" style="display: none;" class="post-template"></div>
+
+		<!--<footer id="footer">
+			<div class="inner">
+				<section class="credits">
+					<span class="credits-theme">Theme <a href="https://github.com/zutrinken/attila">Attila</a> by <a href="http://zutrinken.com" rel="nofollow">zutrinken</a></span>
+					<span class="credits-software">Published with <a href="http://ghost.org">Ghost</a></span>
+				</section>
+			</div>
+		</footer>-->
+	</section>
+	<script src="../assets/js/highlight.pack.js?v=9f59a620c0"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+
+	<!--<script type="text/javascript" src="/assets/js/script.js?v=9f59a620c0"></script>-->
+
+	<script>
+  (function(a,b,c){var d=a.history,e=document,f=navigator||{},g=localStorage,
+  h=encodeURIComponent,i=d.pushState,k=function(){return Math.random().toString(36)},
+  l=function(){return g.cid||(g.cid=k()),g.cid},m=function(r){var s=[];for(var t in r)
+  r.hasOwnProperty(t)&&void 0!==r[t]&&s.push(h(t)+"="+h(r[t]));return s.join("&")},
+  n=function(r,s,t,u,v,w,x){var z="https://www.google-analytics.com/collect",
+  A=m({v:"1",ds:"web",aip:c.anonymizeIp?1:void 0,tid:b,cid:l(),t:r||"pageview",
+  sd:c.colorDepth&&screen.colorDepth?screen.colorDepth+"-bits":void 0,dr:e.referrer||
+  void 0,dt:e.title,dl:e.location.origin+e.location.pathname+e.location.search,ul:c.language?
+  (f.language||"").toLowerCase():void 0,de:c.characterSet?e.characterSet:void 0,
+  sr:c.screenSize?(a.screen||{}).width+"x"+(a.screen||{}).height:void 0,vp:c.screenSize&&
+  a.visualViewport?(a.visualViewport||{}).width+"x"+(a.visualViewport||{}).height:void 0,
+  ec:s||void 0,ea:t||void 0,el:u||void 0,ev:v||void 0,exd:w||void 0,exf:"undefined"!=typeof x&&
+  !1==!!x?0:void 0});if(f.sendBeacon)f.sendBeacon(z,A);else{var y=new XMLHttpRequest;
+  y.open("POST",z,!0),y.send(A)}};d.pushState=function(r){return"function"==typeof d.onpushstate&&
+  d.onpushstate({state:r}),setTimeout(n,c.delay||10),i.apply(d,arguments)},n(),
+  a.ma={trackEvent:function o(r,s,t,u){return n("event",r,s,t,u)},
+  trackException:function q(r,s){return n("exception",null,null,null,null,r,s)}}})
+  (window,"UA-98677497-1",{anonymizeIp:true,colorDepth:true,characterSet:true,screenSize:true,language:true});
+</script>
+
+</body>
+</html>
