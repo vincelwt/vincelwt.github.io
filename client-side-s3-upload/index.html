@@ -9,7 +9,7 @@
 	<meta name="HandheldFriendly" content="True" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-	<link rel="stylesheet" type="text/css" href="../assets/css/style.css?v=62e7235714" />
+	<link rel="stylesheet" type="text/css" href="../assets/css/style.css?v=f05f6f596e" />
 
 	<link rel="shortcut icon" href="../favicon.png" type="image/png" />
     <link rel="canonical" href="index.html" />
@@ -28,7 +28,7 @@
     <meta name="twitter:description" content="Your servers need to take a break" />
     <meta name="twitter:url" content="http://localhost:2368/client-side-s3-upload/" />
     <meta name="twitter:label1" content="Written by" />
-    <meta name="twitter:data1" content="Vincent" />
+    <meta name="twitter:data1" content="Vince" />
     <meta name="twitter:site" content="@vincelwt" />
     <meta name="twitter:creator" content="@vincelwt" />
     
@@ -48,7 +48,7 @@
     },
     "author": {
         "@type": "Person",
-        "name": "Vincent",
+        "name": "Vince",
         "image": {
             "@type": "ImageObject",
             "url": "http://localhost:2368/content/images/2019/01/unabomber.png",
@@ -57,6 +57,7 @@
         },
         "url": "http://localhost:2368/author/vince/",
         "sameAs": [
+            "http://lyser.io",
             "https://twitter.com/vincelwt"
         ]
     },
@@ -72,7 +73,7 @@
 }
     </script>
 
-    <script src="../public/ghost-sdk.js?v=62e7235714"></script>
+    <script src="../public/ghost-sdk.js?v=f05f6f596e"></script>
 <script>
 ghost.init({
 	clientId: "ghost-frontend",
@@ -117,7 +118,7 @@ ghost.init({
 			</span>-->
 		</nav>
 		<h1 class="post-title">Client-side S3 file(s) uploading</h1>
-		<span class="post-meta"><a href="../author/vince/index.html">Vincent</a> | <time datetime="2018-06-13">13 Jun 2018</time></span>
+		<span class="post-meta"><a href="../author/vince/index.html">Vince</a> | <time datetime="2018-06-13">13 Jun 2018</time></span>
 		
 	</div>
 </header>
@@ -226,11 +227,13 @@ inputElement.onchange = function(event) {
 
 						<aside class="post-author">
 							<figure class="post-author-avatar avatar">
-									<img src="../content/images/2019/01/unabomber.png" alt="Vincent" />
+									<img src="../content/images/2019/01/unabomber.png" alt="Vince" />
 							</figure>
 							<div class="post-author-bio">
-								<h4 class="post-author-name"><a href="../author/vince/index.html">Vincent</a></h4>
+								<h4 class="post-author-name"><a href="../author/vince/index.html">Vince</a></h4>
+									<p class="post-author-about">I'm a 18yo former student now traveling the world trying to make a living from my businesses </p>
 									<span class="post-author-location"><i class="ic ic-location"></i> On a beach somewhere</span>
+									<span class="post-author-website"><i class="ic ic-link"></i> <a href="http://lyser.io">Website</a></span>
 									<span class="post-author-twitter"><i class="ic ic-twitter"></i> <a target="_blank" href="https://twitter.com/@vincelwt">Twitter</a></span>
 							</div>
 							<div class="clear"></div>
@@ -244,8 +247,28 @@ inputElement.onchange = function(event) {
 			    <div id="disqus_thread"></div>
 			</section>-->
 
-            <section class="post-subscribe">
-                <form method="post" action="../subscribe/index.html" id="" class="post-subscribe-form">
+			<section class="post-subscribe">
+				<!-- Begin Mailchimp Signup Form -->
+				<link href="http://cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
+				<style type="text/css">
+					#mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; width:100%;}
+					/* Add your own Mailchimp form style overrides in your site stylesheet or in this style block.
+					We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+				</style>
+				<div id="mc_embed_signup">
+					<form action="https://github.us20.list-manage.com/subscribe/post?u=244457a565fef72053bf01f76&amp;id=b39a53ec1a" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+						<div id="mc_embed_signup_scroll">
+							<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Your email address" required>
+						<!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+							<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_244457a565fef72053bf01f76_b39a53ec1a" tabindex="-1" value=""></div>
+							<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+						</div>
+					</form>
+				</div>
+				<p>I can let you know when I write new posts</p>
+				<!--End mc_embed_signup-->
+
+                <!--<form method="post" action="/subscribe/" id="" class="post-subscribe-form">
     <input class="confirm" type="hidden" name="confirm"  /><input class="location" type="hidden" name="location"  /><input class="referrer" type="hidden" name="referrer"  />
 
     <div class="form-group">
@@ -268,7 +291,7 @@ inputElement.onchange = function(event) {
 </form>
 
 
-                <p>Get the latest posts delivered right to your inbox.</p>
+                <p>Get the latest posts delivered right to your inbox.</p>-->
             </section>
 
 			<aside class="post-nav">
@@ -279,7 +302,7 @@ inputElement.onchange = function(event) {
 							<p class="post-nav-excerpt">Or just co-founder.&hellip;</p>
 						</section>
 					</a>
-					<a class="post-nav-prev" href="../optimize-your-electron-app-startup-time/index.html">
+					<a class="post-nav-prev" href="../optimize-electron-startup-time/index.html">
 						<section class="post-nav-teaser">
 							<i class="ic ic-arrow-right"></i>
 							<h2 class="post-nav-title">Electron: optimize app startup time</h2>
@@ -306,10 +329,10 @@ inputElement.onchange = function(event) {
 			</div>
 		</footer>-->
 	</section>
-	<script src="../assets/js/highlight.pack.js?v=62e7235714"></script>
+	<script src="../assets/js/highlight.pack.js?v=f05f6f596e"></script>
 	<script>hljs.initHighlightingOnLoad();</script>
 
-	<!--<script type="text/javascript" src="/assets/js/script.js?v=62e7235714"></script>-->
+	<!--<script type="text/javascript" src="/assets/js/script.js?v=f05f6f596e"></script>-->
 
 	<script>
   (function(a,b,c){var d=a.history,e=document,f=navigator||{},g=localStorage,
