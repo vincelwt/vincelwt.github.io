@@ -19,7 +19,7 @@
     <meta property="og:url" content="http://localhost:2368/build-automated-youtube-channel/" />
     <meta property="og:image" content="http://localhost:2368/content/images/2018/12/youtubetrend-1.jpg" />
     <meta property="article:published_time" content="2017-09-21T17:05:00.000Z" />
-    <meta property="article:modified_time" content="2018-12-21T14:13:30.000Z" />
+    <meta property="article:modified_time" content="2019-07-19T14:59:03.000Z" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Weekend project: Build an automated YouTube Channel" />
     <meta name="twitter:description" content="Nice background" />
@@ -64,7 +64,7 @@
     "headline": "Weekend project: Build an automated YouTube Channel",
     "url": "http://localhost:2368/build-automated-youtube-channel/",
     "datePublished": "2017-09-21T17:05:00.000Z",
-    "dateModified": "2018-12-21T14:13:30.000Z",
+    "dateModified": "2019-07-19T14:59:03.000Z",
     "image": {
         "@type": "ImageObject",
         "url": "http://localhost:2368/content/images/2018/12/youtubetrend-1.jpg",
@@ -114,7 +114,7 @@
             </figure>
             <section class="post-content">
 
-                <p>You can't miss it. Today, the trend on YouTube is for static music videos with beautiful girls or landscapes. More often that not with the channel logo upfront.</p><figure class="kg-card kg-image-card"></figure><p>I wanted to see if it was possible to create this kind of channel, fully automated with just a Python script.</p><p>The first step is to find a music source.</p><p>I wanted to find tracks not yet popular on YouTube but with a clear public interest.</p><p>I settled on the <a href="http://hypem.com/popular">"Popular Now"</a> playlist on Hype Machine. This was perfect as HypeMachine already as an API, so no need to go scrape the website.</p><figure class="kg-card kg-image-card"></figure><p>Then, I needed elements to create the static image associated with the music.</p><p>For the background image, Unplash was the obvious choice. I created a collection of ~200 images that would fit for the videos. I would then only need to fetch a random one with <code>https://source.unsplash.com/collection/&lt;collectionid&gt;/1920x1080</code>.</p><figure class="kg-card kg-image-card"></figure><p>I also needed my logo to be put on each video, so I made a quick one.</p><figure class="kg-card kg-image-card"></figure><p>Here is what it would like at the end, after a quick merge:</p><figure class="kg-card kg-image-card"></figure><p>Neat right?</p><p>I then created a folder for every channel I wanted to automate.<br />This allow me to easily add more channels, in less than 5 minutes.</p><figure class="kg-card kg-image-card"></figure><p><code>creds.json</code> contains the channel's oAuth token needed to upload videos to YouTube.</p><p><code>info.json</code> is a very simple file containing some needed infos for the script:</p><pre><code class="language-json">{
+                <p>TLDR: Made a fully automated music YouTube channel. Worked for a while, had lots of views, then got disabled by YouTube.</p><p>You can't miss it. Today, the trend on YouTube is for static music videos with beautiful girls or landscapes. With the channel logo upfront.</p><figure class="kg-card kg-image-card"></figure><p>I wanted to see if it was possible to create this kind of channel, fully automated with just a Python script.</p><p>The first step is to find a music source.</p><p>I wanted to find tracks not yet popular on YouTube but with a clear public interest.</p><p>I settled on the <a href="http://hypem.com/popular">"Popular Now"</a> playlist on Hype Machine. This was perfect as HypeMachine already as an API, so no need to go scrape the website.</p><figure class="kg-card kg-image-card"></figure><p>Then, I needed elements to create the static image associated with the music.</p><p>For the background image, Unplash was the obvious choice. I created a collection of ~200 images that would fit for the videos. I would then only need to fetch a random one with <code>https://source.unsplash.com/collection/&lt;collectionid&gt;/1920x1080</code>.</p><figure class="kg-card kg-image-card"></figure><p>I also needed my logo to be put on each video, so I made a quick one.</p><figure class="kg-card kg-image-card"></figure><p>Here is what it would like at the end, after a quick merge:</p><figure class="kg-card kg-image-card"></figure><p>Neat right?</p><p>I then created a folder for every channel I wanted to automate.<br />This allow me to easily add more channels, in less than 5 minutes.</p><figure class="kg-card kg-image-card"></figure><p><code>creds.json</code> contains the channel's oAuth token needed to upload videos to YouTube.</p><p><code>info.json</code> is a very simple file containing some needed infos for the script:</p><pre><code class="language-json">{
     "name": "Chill Ocean","image": "https://source.unsplash.com/collection//1920x1080",
     "hypem": ["https://api.hypem.com/v2/popular?mode=now&amp;count=10"]
 }
@@ -211,7 +211,7 @@ def createVideo(channel, image, title, artist, itemid, audio_url):
                 'https://hypem.com/serve/public/'+track['itemid']
             )
 
-colored("Script over.", 'red')</code></pre><p>I wrote the id of the music to a file <code>uploaded.txt</code>  located on my Dropbox, so I could use the script on different computers without worrying that a music would be uploaded multiple times.</p><p>Then, you can either choose to manually run the script once a day or set up a cron job to do it for ya.</p><h3 id="final-words">Final words</h3><p>Unfortunately, after a while (6 months) YouTube disabled my channels after a copyright notice, without really explaining what video was the problem.</p><p>The first channel I published brought approximately 1000 subscribers and $1/day before it was shutdown, after a few months of full automation.</p><p>I would have posted my stats here but I can't access the dashboard anymore.</p><p>I'm now looking to start another channel with royalty-free music, to be free of copyright problems and take it as far as possible.</p>
+colored("Script over.", 'red')</code></pre><p>I wrote the id of the music to a file <code>uploaded.txt</code>  located on my Dropbox, so I could use the script on different computers without worrying that a music would be uploaded multiple times.</p><p>Then, you can either choose to manually run the script once a day or set up a cron job to do it for ya.</p><h3 id="what-happened-next">What happened next</h3><p>Unfortunately, after a while (6 months) YouTube disabled my channels after a copyright notice, without really explaining what video was the problem.</p><p>The first channel I published brought approximately 1000 subscribers and $1/day before it was shutdown, after a few months of posting video automatically.</p><p>I would have posted my stats here but I can't access the dashboard anymore.</p><p>I'd like to try and start another channel with royalty-free music, to be free of copyright problems and take it as far as possible.</p>
 
             </section>
 

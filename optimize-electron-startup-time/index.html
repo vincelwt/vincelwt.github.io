@@ -9,7 +9,7 @@
 	<meta name="HandheldFriendly" content="True" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-	<link rel="stylesheet" type="text/css" href="../assets/css/style.css?v=c418d8f6d3" />
+	<link rel="stylesheet" type="text/css" href="../assets/css/style.css?v=eee197fe98" />
 
 	<link rel="shortcut icon" href="../favicon.png" type="image/png" />
     <link rel="canonical" href="index.html" />
@@ -23,7 +23,7 @@
     <meta property="og:url" content="http://localhost:2368/optimize-electron-startup-time/" />
     <meta property="og:image" content="https://images.unsplash.com/photo-1506818144585-74b29c980d4b?ixlib&#x3D;rb-1.2.1&amp;q&#x3D;80&amp;fm&#x3D;jpg&amp;crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;w&#x3D;1080&amp;fit&#x3D;max&amp;ixid&#x3D;eyJhcHBfaWQiOjExNzczfQ" />
     <meta property="article:published_time" content="2018-05-10T18:54:00.000Z" />
-    <meta property="article:modified_time" content="2019-01-26T23:31:02.000Z" />
+    <meta property="article:modified_time" content="2019-07-19T14:56:51.000Z" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Electron: optimize app startup time" />
     <meta name="twitter:description" content="Make your app open terribly faster." />
@@ -68,7 +68,7 @@
     "headline": "Electron: optimize app startup time",
     "url": "http://localhost:2368/optimize-electron-startup-time/",
     "datePublished": "2018-05-10T18:54:00.000Z",
-    "dateModified": "2019-01-26T23:31:02.000Z",
+    "dateModified": "2019-07-19T14:56:51.000Z",
     "image": {
         "@type": "ImageObject",
         "url": "https://images.unsplash.com/photo-1506818144585-74b29c980d4b?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjExNzczfQ",
@@ -83,7 +83,7 @@
 }
     </script>
 
-    <script src="../public/ghost-sdk.js?v=c418d8f6d3"></script>
+    <script src="../public/ghost-sdk.js?v=eee197fe98"></script>
 <script>
 ghost.init({
 	clientId: "ghost-frontend",
@@ -138,7 +138,7 @@ ghost.init({
 		<div class="inner">
 
 			<section class="post-content">
-				<p>It's well known that Electron apps have sub-par performances compared to their native counterparts.</p><p>I think that's true to some extent, altough a greatly coded Electron app can feel as smooth as a native app to use.</p><p>Recently, I applied some optimizations to my app <a href="https://getharmony.xyz">Harmony</a> (a music player) making the startup feel much faster.</p><p>Before:</p><p>After:</p><p>On my app, here is what happens (in short) on startup:</p><ul><li>HTML &amp; CSS are loaded and rendered</li><li>Javascript is asynchronously loaded</li><li>Dependencies are loaded (the longest)</li><li>JS starts and sets the UI elements in place (tracks, buttons, etc...)</li></ul><p>As an end-user, you used to first see the basic HTML structure then after a few seconds element starts to appear where they need to be and fill the UI.</p><p>Why not save the state of the app so we can directly show a pre-rendered UI ?</p><p>For example, by exporting the DOM before quitting the app and loading it back on start.</p><p>Turns out it can be done pretty trivially, altough there is a few headaches on the path.</p><h2 id="the-code">The code<br></h2><p>Everything here is executed from the main process.</p><p>First a function saves the current state of the app to an HTML file. <br><br>It contains the current version of the app in its name. If in the future you modify the HTML, your users will use the updated version instead of an old cached one.</p><pre><code>const saveState = () =&gt; {
+				<p>It's well known that Electron apps usually have sub-par performances compared to their native counterparts. Although a greatly coded Electron app can feel as smooth as a native app to use.</p><p>Recently, I applied some optimizations to my app <a href="https://getharmony.xyz">Harmony</a> (a music player) making the startup feel much faster.</p><p>Before: [insert gif]</p><p>After:  [insert gif]</p><p>On my app, here is what happens (in short) on startup:</p><ul><li>HTML &amp; CSS are loaded and rendered</li><li>Javascript is asynchronously loaded</li><li>Dependencies are loaded (the longest)</li><li>JS starts and sets the UI elements in place (tracks, buttons, etc...)</li></ul><p>As an end-user, you used to first see the basic HTML structure then after a few seconds element starts to appear where they need to be and fill the UI.</p><p>Why not save the state of the app so we can directly show a pre-rendered UI ?</p><p>For example, by exporting the DOM before quitting the app and loading it back on start.</p><p>Turns out it can be done pretty trivially, altough there was a few headaches on the path.</p><h2 id="the-code">The code<br></h2><p>Everything here is executed from the main process.</p><p>First a function saves the current state of the app to an HTML file. <br><br>It contains the current version of the app in its name. If in the future you modify the HTML, your users will use the updated version instead of an old cached one.</p><!--kg-card-begin: code--><pre><code class="language-javascript">const saveState = () =&gt; {
 	console.log('Saving window for faster startup...')
 
 	// regex .replace is for escaping mfucking windows paths
@@ -170,13 +170,13 @@ ghost.init({
 	
 	`)
 }
-</code></pre><p>Reset/remove the elements of the UI you want in place and save the HTML to a new file in the <code>userData</code> directory.</p><blockquote>Make sure your saved HTML begins with <code>&lt;!DOCTYPE html&gt;</code>  or it won't work when we loading from the Data URL. Spent a while on that one :P</blockquote><p>Now we invoke the function on <code>before-quit</code>, every time we close the app.</p><pre><code>app.on('before-quit', () =&gt;  {
+</code></pre><!--kg-card-end: code--><p>Reset/remove the elements of the UI you want in place and save the HTML to a new file in the <code>userData</code> directory.</p><blockquote>Make sure your saved HTML begins with <code>&lt;!DOCTYPE html&gt;</code>  or it won't work when we loading from the Data URL. Spent a while on that one :P</blockquote><p>Now we invoke the function on <code>before-quit</code>, every time we close the app.</p><!--kg-card-begin: code--><pre><code class="language-javascript">app.on('before-quit', () =&gt;  {
 	willQuitApp = true
 	
 	saveState()
 })
 
-</code></pre><p>Also call it from your app window's <code>close</code> event:</p><pre><code>window.on('close', (e) =&gt; {
+</code></pre><!--kg-card-end: code--><p>Also call it from your app window's <code>close</code> event:</p><!--kg-card-begin: code--><pre><code>window.on('close', (e) =&gt; {
 	saveState()
 
 	if (willQuitApp || process.platform !== 'darwin') {
@@ -189,7 +189,7 @@ ghost.init({
 	}
 })
 
-</code></pre><p>Now, if the user has the cached <code>index.html</code> in his cache load it will use it instead of the default <code>index.html</code>.</p><pre><code>let cachedIndex = path.join(app.getPath('userData'), `/your_app${app.getVersion()}_index.html`) // Used for faster startup
+</code></pre><!--kg-card-end: code--><p>Now, if the user has the cached <code>index.html</code> in his cache load it will use it instead of the default <code>index.html</code>.</p><!--kg-card-begin: code--><pre><code>let cachedIndex = path.join(app.getPath('userData'), `/your_app${app.getVersion()}_index.html`) // Used for faster startup
 
 let indexToPull = fs.existsSync(cachedIndex) ? cachedIndex : path.join(__dirname, '/app/index.html')
 
@@ -200,9 +200,9 @@ const pageContent = fs.readFileSync(indexToPull,'utf8')
 window.loadURL('data:text/html;charset=UTF-8,' + encodeURIComponent(pageContent), {
 	baseURLForDataURL: `file://${__dirname}/app/`
 })
-</code></pre><p>Depending on if a cached HTML exists, we load the corresponding file.</p><p>We can't load the cached file from its path as we'll be placed in the <code>userData</code> directory and won't be able to access any static files (CSS, JS, images).</p><p>So we have to read it and then send it as a Data URL to be rendered.</p><p>Now however, your JS context will be 'placed' in the same directory as your main process file. </p><p>Say you have in <code>app.js</code> some local dependencies like <code>require('./utils/db')</code> - well it won't work. You're relative to your main folder.</p><pre><code class="language-javascript">require('./app/js/utils/db')
+</code></pre><!--kg-card-end: code--><p>Depending on if a cached HTML exists, we load the corresponding file.</p><p>We can't load the cached file from its path as we'll be placed in the <code>userData</code> directory and won't be able to access any static files (CSS, JS, images).</p><p>So we have to read it and then send it as a Data URL to be rendered.</p><p>Now however, your JS context will be 'placed' in the same directory as your main process file. </p><p>Say you have in <code>app.js</code> some local dependencies like <code>require('./utils/db')</code> - well it won't work. You're relative to your main folder.</p><!--kg-card-begin: markdown--><pre><code class="language-javascript">require('./app/js/utils/db')
 </code></pre>
-<h2 id="end-words">End words<br></h2><p>The caveat to this technique is even if the UI appears loaded, you can't interact with the app until the proper JS is fully loaded.</p><p>This can be further optimized by loading first only the UI interaction code then the rest. For most users its not noticeable tho.</p><p>I'll maybe try to build a module if that can be useful to other apps.</p>
+<!--kg-card-end: markdown--><h2 id="end-words">End words<br></h2><p>The caveat to this technique is even if the UI appears loaded, you can't interact with the app until the proper JS is fully loaded.</p><p>This can be further optimized by loading first only the UI interaction code then the rest. For most users its not noticeable tho.</p><p>Maybe i'll try to build that into a module if that can be useful to other apps.</p>
 			</section>
 
 			<section class="post-info">
@@ -327,10 +327,10 @@ window.loadURL('data:text/html;charset=UTF-8,' + encodeURIComponent(pageContent)
 			</div>
 		</footer>-->
 	</section>
-	<script src="../assets/js/highlight.pack.js?v=c418d8f6d3"></script>
+	<script src="../assets/js/highlight.pack.js?v=eee197fe98"></script>
 	<script>hljs.initHighlightingOnLoad();</script>
 
-	<!--<script type="text/javascript" src="/assets/js/script.js?v=c418d8f6d3"></script>-->
+	<!--<script type="text/javascript" src="/assets/js/script.js?v=eee197fe98"></script>-->
 
 	<script>
   (function(a,b,c){var d=a.history,e=document,f=navigator||{},g=localStorage,
